@@ -13,6 +13,15 @@ class Base(models.Model):
         upload_to="base",
         verbose_name='Фото'
     )
+    is_active = models.BooleanField(
+        default=False
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )    
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
 
     def save(self,  *args, **kwargs):
         is_new = self._state.adding or 'force_inset' in kwargs
