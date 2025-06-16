@@ -145,3 +145,8 @@ MEDIA_ROOT = BASE_DIR/ 'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CELERY_BROKER_URL = 'memory://'
+CELERY_RESULT_BACKEND = 'cache+memory://'
+
+CELERY_TASK_ALWAYS_EAGER = True

@@ -2,6 +2,7 @@ from django.db import models
 from apps.utils import convert_image
 from telegram.utils import send_telegram_message
 from asgiref.sync import async_to_sync
+from telegram.tasks import send_telegram_message_task
 
 class Base(models.Model):
     title = models.CharField(
@@ -35,15 +36,23 @@ class Base(models.Model):
             self.image.name = updated_path
             super().save(update_fields=["image"])
 
+        # if is_new:
+        #     try:
+        #         async_to_sync(send_telegram_message)(
+        #         f"New Text\n\n"
+        #         f"Title {self.title}\n"
+        #         f"DEscription {self.description}"
+        #     )
+        #     except Exception as e:
+        #         print("Error", e)
         if is_new:
-            try:
-                async_to_sync(send_telegram_message)(
-                f"New Text\n\n"
-                f"Title {self.title}\n"
-                f"DEscription {self.description}"
-            )
-            except Exception as e:
-                print("Error", e)
+            message = (
+                 f"New Text\n\n"
+                 f"Title {self.title}\n"
+                 f"DEscription {self.description}"
+             )
+            send_telegram_message_task.delay(message)
+
 
     def __str__(self):
         return self.title
